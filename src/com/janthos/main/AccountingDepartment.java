@@ -11,10 +11,11 @@ public class AccountingDepartment
 	{
 		company = new Company("ABC Inc.");
 		
+		init();
 		
-		System.out.println("Company ABC Inc. Building Expense");
+		System.out.println("Company " + company.getBrandName() + " Building Expense");
+		
 		printMenu();
-		
 		int option = keyboard.nextInt();
 		keyboard.nextLine();
 		
@@ -281,6 +282,41 @@ public class AccountingDepartment
 			keyboard.nextLine();
 		}
 		ExpenseType expenseType = ExpenseType.values()[type - 1];
-		System.out.println("The total cost of " +  expenseType.toString() + " is: " + company.calculateTotalCostOfExpense(expenseType));
+		System.out.println("The total cost for " +  expenseType.toString() + " is: " + company.calculateTotalCostOfExpense(expenseType) + " euros.");
+	}
+	
+	public static void init()
+	{
+		company.addBuilding(new Building("B001", "University", "Athens A", 10, 400));
+		company.addBuilding(new Building("B002", "Library", "Athens B", 5, 200));
+		company.addBuilding(new Building("B003", "Prof Office", "Piraeus", 10, 50));
+		company.addBuilding(new Building("B004", "Lab 1", "Thessaloniki A", 20, 100));
+		company.addBuilding(new Building("B005", "Lab 2", "Thessaloniki B", 20, 150));
+		
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new WaterExpense("W001", "EYDAP", 0.005, 0.008, 15), 40));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new WaterExpense("W002", "EYDAP", 0.007, 0.01, 15), 15));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new WaterExpense("W003", "EYDAP", 0.01, 0.015, 15), 5));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new WaterExpense("W004", "EYDAP", 0.005, 0.008, 15), 120));
+		
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new EnergyExpense("E001", "DEH", 0.005, 30, 15.5), 1600));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new EnergyExpense("E002", "DEH", 0.008, 30, 15.5), 1000));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new EnergyExpense("E003", "HRON", 0.007, 20, 15.5), 150));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new EnergyExpense("E004", "HRON", 0.007, 20, 15.5), 200));
+		
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new TelephoneExpense("T001", "Wind", 0.001, 18, 5.5), 600));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new TelephoneExpense("T002", "OTE", 0.002, 30, 10), 800));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new TelephoneExpense("T003", "Vodafone", 0.0015, 20, 10), 100));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new TelephoneExpense("T004", "Vodafone", 0.0015, 20, 10), 300));
+		
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new FixedExpense("R001", "Rent description 1", 0.2, ExpenseType.Rent), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new FixedExpense("R001", "Rent description 2", 0.2, ExpenseType.Rent), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new FixedExpense("R001", "Rent description 3", 0.25, ExpenseType.Rent), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new FixedExpense("R001", "Rent description 4", 0.5, ExpenseType.Rent), 0));
+		
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new FixedExpense("C001", "Cleaning description 1", 0.2, ExpenseType.Cleaning), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new FixedExpense("C002", "Cleaning description 2", 0.15, ExpenseType.Cleaning), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new FixedExpense("C003", "Cleaning description 3", 0.3, ExpenseType.Cleaning), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new FixedExpense("C004", "Cleaning description 4", 0.5, ExpenseType.Cleaning), 0));
+
 	}
 }

@@ -70,6 +70,8 @@ public class Company
 	
 	public double caclulateBuildingExpense(Building building)
 	{
+		if (building == null) return -1;
+		
 		double totalExpense = 0;
 		
 		for (BuildingExpense buildExp : buildingExpense)
@@ -82,6 +84,8 @@ public class Company
 	
 	public double calculateTotalCostOfExpense(ExpenseType expenseType)
 	{
+		if (expenseType == null) return -1;
+		
 		double totalCost = 0;
 		
 		for (BuildingExpense bExp: buildingExpense)
