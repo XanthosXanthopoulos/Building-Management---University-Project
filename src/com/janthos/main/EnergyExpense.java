@@ -32,4 +32,9 @@ public class EnergyExpense extends VariableExpense
 	{
 		return getFixedCost() + monthlyERTCost + costParameter[0] * costParameter[1] + getPricePerUnit() * costParameter[2];
 	}
+	
+	public String toString()
+	{
+		return super.toString() + String.format("ERT monthly cost: %.3f", monthlyERTCost);
+	}
 }

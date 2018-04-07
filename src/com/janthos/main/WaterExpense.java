@@ -8,7 +8,7 @@ public class WaterExpense extends VariableExpense
 	
 	public WaterExpense(String code, String description, double pricePerUnit, double pricePerUnit_2, double fixedCost)
 	{
-		super(code, description, pricePerUnit, "Cubic Meters", fixedCost, ExpenseType.Water);
+		super(code, description, pricePerUnit, "m^3", fixedCost, ExpenseType.Water);
 		this.pricePerUnit_2 = pricePerUnit_2;
 	}
 	
@@ -38,5 +38,10 @@ public class WaterExpense extends VariableExpense
 		{
 			return getFixedCost() + pricePerUnit_2 * costParameter[2];
 		}
+	}
+	
+	public String toString()
+	{
+		return super.toString() + String.format("Cost per %-5s (>100):  %.3f", getUnit(), pricePerUnit_2);
 	}
 }

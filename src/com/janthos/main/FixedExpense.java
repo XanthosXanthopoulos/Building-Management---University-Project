@@ -30,7 +30,7 @@ public class FixedExpense extends Expense
 
 	public String toString()
 	{
-		return super.toString() + pricePerSquareMeter;
+		return super.toString() + String.format("%.3f per m^2", pricePerSquareMeter);
 	}
 	
 	public double calculateExpense(double[] costParameter) 

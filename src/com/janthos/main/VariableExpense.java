@@ -5,7 +5,6 @@ public abstract class VariableExpense extends Expense
 	private double pricePerUnit;
 	private String unit;
 	private double fixedCost;
-	private double costCoefficient;
 	
 	public VariableExpense() {}
 	
@@ -57,6 +56,6 @@ public abstract class VariableExpense extends Expense
 	
 	public String toString()
 	{
-		return super.toString() + pricePerUnit + " " + unit + " " + fixedCost + " " + costCoefficient; 
+		return super.toString() + String.format("%.3f", pricePerUnit) + String.format(" per %-5s ", unit) + String.format("%.3f ", fixedCost); 
 	}
 }

@@ -8,7 +8,7 @@ public class TelephoneExpense extends VariableExpense
 	
 	public TelephoneExpense(String code, String description, double pricePerUnit, double fixedCost, double telephoneCharges)
 	{
-		super(code, description, pricePerUnit, "Minutes", fixedCost, ExpenseType.Telephone);
+		super(code, description, pricePerUnit, "min", fixedCost, ExpenseType.Telephone);
 		this.telephoneCharges = telephoneCharges;
 	}
 	
@@ -31,5 +31,10 @@ public class TelephoneExpense extends VariableExpense
 	public double calculateExpense(double[] costParameter) 
 	{
 		return getFixedCost() + telephoneCharges + getPricePerUnit() * costParameter[2];
+	}
+	
+	public String toString()
+	{
+		return super.toString() + String.format("Monthly telephone charges: %.3f", telephoneCharges);
 	}
 }
