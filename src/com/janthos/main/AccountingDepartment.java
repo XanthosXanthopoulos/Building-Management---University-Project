@@ -25,11 +25,11 @@ public class AccountingDepartment
 			{
 				case 1:
 					if (company.addBuilding(createBuildingFromUserInput())) System.out.println("Building added successfully.");
-					else System.out.println("An error occured.");
+					else System.out.println("Addition failed.");
 					break;
 				case 2:
 					if (company.addBuildingExpense(createBuildingExpenseFromUserInput())) System.out.println("Building expense added successfully.");
-					else System.out.println("An error occured.");
+					else System.out.println("Addition failed.");
 					break;
 				case 3:
 					showBuildings(company);
@@ -72,7 +72,7 @@ public class AccountingDepartment
 	public static Building createBuildingFromUserInput()
 	{
 		Building building = null;
-		
+
 		System.out.print("Enter building code: ");
 		String code = keyboard.nextLine();
 		while (!company.checkBuildingCodeAvailability(code))
@@ -80,6 +80,7 @@ public class AccountingDepartment
 			System.out.print("Code already used. Try another one. Building code: ");
 			code = keyboard.nextLine();
 		}
+		
 		System.out.print("Enter building description: ");
 		String description = keyboard.nextLine();
 		System.out.print("Enter building address: ");
@@ -92,6 +93,10 @@ public class AccountingDepartment
 		keyboard.nextLine();
 		
 		building = new Building(code, description, address, zoneValue, area);
+		
+		System.out.println(building.toString());
+		System.out.print("Add building Y/N? ");
+		if (keyboard.nextLine().equals("N")) return null;
 		
 		return building;
 	}
@@ -189,6 +194,10 @@ public class AccountingDepartment
 			}
 		}
 		
+		System.out.println(expense.toString());
+		System.out.print("Add expense Y/N? ");
+		if (keyboard.nextLine().equals("N")) return null;
+		
 		return expense;
 	}
 	
@@ -207,6 +216,8 @@ public class AccountingDepartment
 		}
 		
 		Expense expense = createExpenseFromUserInput();
+		if (expense == null) return null;
+		
 		double consumption = 0;
 		
 		if (expense instanceof VariableExpense) 
@@ -217,6 +228,10 @@ public class AccountingDepartment
 		}
 		
 		buildingExpense = new BuildingExpense(building, expense, consumption);
+		
+		System.out.println(buildingExpense.toString());
+		System.out.print("Add building expense Y/N? ");
+		if (keyboard.nextLine().equals("N")) return null;
 		
 		return buildingExpense;
 	}
