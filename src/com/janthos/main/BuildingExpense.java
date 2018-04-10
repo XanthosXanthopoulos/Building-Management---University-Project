@@ -47,6 +47,6 @@ public class BuildingExpense
 	
 	public double calculateCost()
 	{
-		return expense.calculateExpense(new double[]{building.getArea(), building.getZoneValue(), consumption});
+		return expense.calculateExpense(this);
 	}
 }

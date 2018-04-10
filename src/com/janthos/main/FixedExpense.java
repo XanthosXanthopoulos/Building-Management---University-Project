@@ -33,8 +33,8 @@ public class FixedExpense extends Expense
 		return super.toString() + String.format("%.3f per m^2", pricePerSquareMeter);
 	}
 	
-	public double calculateExpense(double[] costParameter) 
+	public double calculateExpense(BuildingExpense buildingExpense) 
 	{
-		return pricePerSquareMeter * costParameter[0];
+		return pricePerSquareMeter * buildingExpense.getBuilding().getArea();
 	}
 }

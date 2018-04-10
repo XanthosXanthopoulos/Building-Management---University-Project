@@ -57,5 +57,5 @@ public abstract class Expense
 		return String.format("%-10s", expenseType.toString()) + String.format("%-8s", code) + String.format("%-30s", description);
 	}
 	
-	public abstract double calculateExpense(double[] costParameter);
+	public abstract double calculateExpense(BuildingExpense buildingExpense);
 }

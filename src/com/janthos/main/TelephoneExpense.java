@@ -28,9 +28,9 @@ public class TelephoneExpense extends VariableExpense
 		this.telephoneCharges = telephoneCharges;
 	}
 
-	public double calculateExpense(double[] costParameter) 
+	public double calculateExpense(BuildingExpense buildingExpense) 
 	{
-		return getFixedCost() + telephoneCharges + getPricePerUnit() * costParameter[2];
+		return getFixedCost() + telephoneCharges + getPricePerUnit() * buildingExpense.getConsumption();
 	}
 	
 	public String toString()

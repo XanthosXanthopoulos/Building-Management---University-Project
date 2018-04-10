@@ -28,15 +28,15 @@ public class WaterExpense extends VariableExpense
 		this.pricePerUnit_2 = pricePerUnit_2;
 	}
 	
-	public double calculateExpense(double[] costParameter) 
+	public double calculateExpense(BuildingExpense buildingExpense) 
 	{
-		if (costParameter[2] <= 100)
+		if (buildingExpense.getConsumption() <= 100)
 		{
-			return getFixedCost() + getPricePerUnit() * costParameter[2];
+			return getFixedCost() + getPricePerUnit() * buildingExpense.getConsumption();
 		}
 		else
 		{
-			return getFixedCost() + pricePerUnit_2 * costParameter[2];
+			return getFixedCost() + pricePerUnit_2 * buildingExpense.getConsumption();
 		}
 	}
 	
