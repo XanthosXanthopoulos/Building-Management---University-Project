@@ -181,7 +181,7 @@ public class AccountingDepartment
 				System.out.print("Enter price per square meter: ");
 				double pricePerSquareMeter = keyboard.nextDouble();
 				keyboard.nextLine();
-				expense = new FixedExpense(code, description, pricePerSquareMeter, ExpenseType.Rent);
+				expense = new RentExpense(code, description, pricePerSquareMeter);
 				break;
 			}
 			case 5:
@@ -189,7 +189,7 @@ public class AccountingDepartment
 				System.out.print("Enter price per square meter: ");
 				double pricePerSquareMeter = keyboard.nextDouble();
 				keyboard.nextLine();
-				expense = new FixedExpense(code, description, pricePerSquareMeter, ExpenseType.Cleaning);
+				expense = new CleaningExpense(code, description, pricePerSquareMeter);
 				break;
 			}
 		}
@@ -225,9 +225,14 @@ public class AccountingDepartment
 			System.out.print("Enter consumption: ");
 			consumption = keyboard.nextDouble();
 			keyboard.nextLine();
+			buildingExpense = new BuildingExpense(building, (VariableExpense)expense, consumption);
+		}
+		else if (expense instanceof FixedExpense)
+		{
+			buildingExpense = new BuildingExpense(building, (FixedExpense)expense);
 		}
 		
-		buildingExpense = new BuildingExpense(building, expense, consumption);
+		
 		
 		System.out.println(buildingExpense.toString());
 		System.out.print("Add building expense Y/N? ");
@@ -281,12 +286,14 @@ public class AccountingDepartment
 	
 	public static void showExpenseTotalCost(Company company)
 	{
-		for (ExpenseType expenseType : ExpenseType.values())
-		{
-			System.out.println((expenseType.ordinal() + 1) + ") " + expenseType.toString());
-		}
-		
+		System.out.println("Expense Type");
+		System.out.println("1) Water");
+		System.out.println("2) Telephone");
+		System.out.println("3) Energy");
+		System.out.println("4) Rent");
+		System.out.println("5) Cleaning");
 		System.out.print("Choose an expense type by number: ");
+		
 		int type = keyboard.nextInt();
 		keyboard.nextLine();
 		
@@ -296,7 +303,27 @@ public class AccountingDepartment
 			type = keyboard.nextInt();
 			keyboard.nextLine();
 		}
-		ExpenseType expenseType = ExpenseType.values()[type - 1];
+		Class<?> expenseType = null;
+		
+		switch (type)
+		{
+			case 1:
+				expenseType = WaterExpense.class;
+				break;
+			case 2:
+				expenseType = TelephoneExpense.class;
+				break;
+			case 3:
+				expenseType = EnergyExpense.class;
+				break;
+			case 4:
+				expenseType = RentExpense.class;
+				break;
+			case 5:
+				expenseType = CleaningExpense.class;
+				break;
+		}
+		
 		System.out.println("The total cost for " +  expenseType.toString() + " is: " + company.calculateTotalCostOfExpense(expenseType) + " euros.");
 	}
 	
@@ -323,15 +350,15 @@ public class AccountingDepartment
 		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new TelephoneExpense("T003", "Vodafone", 0.0015, 20, 10), 100));
 		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new TelephoneExpense("T004", "Vodafone", 0.0015, 20, 10), 300));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new FixedExpense("R001", "Rent description 1", 0.2, ExpenseType.Rent), 0));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new FixedExpense("R001", "Rent description 2", 0.2, ExpenseType.Rent), 0));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new FixedExpense("R001", "Rent description 3", 0.25, ExpenseType.Rent), 0));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new FixedExpense("R001", "Rent description 4", 0.5, ExpenseType.Rent), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new RentExpense("R001", "Rent description 1", 0.2)));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new RentExpense("R001", "Rent description 2", 0.2)));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new RentExpense("R001", "Rent description 3", 0.25)));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new RentExpense("R001", "Rent description 4", 0.5)));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new FixedExpense("C001", "Cleaning description 1", 0.2, ExpenseType.Cleaning), 0));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new FixedExpense("C002", "Cleaning description 2", 0.15, ExpenseType.Cleaning), 0));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new FixedExpense("C003", "Cleaning description 3", 0.3, ExpenseType.Cleaning), 0));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new FixedExpense("C004", "Cleaning description 4", 0.5, ExpenseType.Cleaning), 0));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new CleaningExpense("C001", "Cleaning description 1", 0.2)));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new CleaningExpense("C002", "Cleaning description 2", 0.15)));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new CleaningExpense("C003", "Cleaning description 3", 0.3)));
+		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new CleaningExpense("C004", "Cleaning description 4", 0.5)));
 
 	}
 }

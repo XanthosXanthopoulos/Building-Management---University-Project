@@ -1,14 +1,14 @@
 package com.janthos.main;
 
-public class FixedExpense extends Expense
+public abstract class FixedExpense extends Expense
 {
 	private double pricePerSquareMeter;
 	
 	public FixedExpense() {}
 	
-	public FixedExpense(String code, String description, double pricePerSquareMeter, ExpenseType expenseType)
+	public FixedExpense(String code, String description, double pricePerSquareMeter)
 	{
-		super(code, description, expenseType);
+		super(code, description);
 		this.pricePerSquareMeter = pricePerSquareMeter;
 	}
 	
@@ -31,10 +31,5 @@ public class FixedExpense extends Expense
 	public String toString()
 	{
 		return super.toString() + String.format("%.3f per m^2", pricePerSquareMeter);
-	}
-	
-	public double calculateExpense(BuildingExpense buildingExpense) 
-	{
-		return pricePerSquareMeter * buildingExpense.getBuilding().getArea();
 	}
 }

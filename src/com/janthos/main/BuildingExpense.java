@@ -6,9 +6,19 @@ public class BuildingExpense
 	private Expense expense;
 	private double consumption;
 	
-	public BuildingExpense() {}
+	public BuildingExpense() 
+	{
+		consumption = 0;
+	}
 	
-	public BuildingExpense(Building building, Expense expense, double consumption)
+	public BuildingExpense(Building building, FixedExpense expense)
+	{
+		this.building = building;
+		this.expense = expense;
+		this.consumption = 0;
+	}
+	
+	public BuildingExpense(Building building, VariableExpense expense, double consumption)
 	{
 		this.building = building;
 		this.expense = expense;

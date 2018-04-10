@@ -8,7 +8,7 @@ public class WaterExpense extends VariableExpense
 	
 	public WaterExpense(String code, String description, double pricePerUnit, double pricePerUnit_2, double fixedCost)
 	{
-		super(code, description, pricePerUnit, "m^3", fixedCost, ExpenseType.Water);
+		super(code, description, pricePerUnit, "m^3", fixedCost);
 		this.pricePerUnit_2 = pricePerUnit_2;
 	}
 	

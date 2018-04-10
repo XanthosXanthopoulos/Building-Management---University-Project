@@ -8,7 +8,7 @@ public class EnergyExpense extends VariableExpense
 	
 	public EnergyExpense(String code, String description, double pricePerUnit, double fixedCost, double monthlyERTCost)
 	{
-		super(code, description, pricePerUnit, "kWh", fixedCost, ExpenseType.Energy);
+		super(code, description, pricePerUnit, "kWh", fixedCost);
 		this.monthlyERTCost = monthlyERTCost;
 	}
 	

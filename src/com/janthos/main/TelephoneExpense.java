@@ -8,7 +8,7 @@ public class TelephoneExpense extends VariableExpense
 	
 	public TelephoneExpense(String code, String description, double pricePerUnit, double fixedCost, double telephoneCharges)
 	{
-		super(code, description, pricePerUnit, "min", fixedCost, ExpenseType.Telephone);
+		super(code, description, pricePerUnit, "min", fixedCost);
 		this.telephoneCharges = telephoneCharges;
 	}
 	

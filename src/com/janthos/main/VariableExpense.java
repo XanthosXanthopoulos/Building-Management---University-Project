@@ -8,9 +8,9 @@ public abstract class VariableExpense extends Expense
 	
 	public VariableExpense() {}
 	
-	public VariableExpense(String code, String description, double pricePerUnit, String unit, double fixedCost, ExpenseType expenseType)
+	public VariableExpense(String code, String description, double pricePerUnit, String unit, double fixedCost)
 	{
-		super(code, description, expenseType);
+		super(code, description);
 		this.pricePerUnit = pricePerUnit;
 		this.unit = unit;
 		this.fixedCost = fixedCost;

@@ -82,15 +82,15 @@ public class Company
 		return totalExpense;
 	}
 	
-	public double calculateTotalCostOfExpense(ExpenseType expenseType)
+	public double calculateTotalCostOfExpense(Class<?> expenseType)
 	{
-		if (expenseType == null) return -1;
+		if (expense == null) return -1;
 		
 		double totalCost = 0;
 		
 		for (BuildingExpense bExp: buildingExpense)
 		{
-			if (bExp.getExpense().getExpenseType() == expenseType)
+			if (bExp.getExpense().getClass() == expenseType)
 			{
 				totalCost += bExp.calculateCost();
 			}
