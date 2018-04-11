@@ -28,7 +28,7 @@ public class WaterExpense extends VariableExpense
 		this.pricePerUnit_2 = pricePerUnit_2;
 	}
 	
-	public double calculateExpense(BuildingExpense buildingExpense) 
+	public double calculateExpense(VariableBuildingExpense buildingExpense) 
 	{
 		if (buildingExpense.getConsumption() <= 100)
 		{

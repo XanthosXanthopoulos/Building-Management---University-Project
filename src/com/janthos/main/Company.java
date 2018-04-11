@@ -7,22 +7,22 @@ public class Company
 	
 	private String brandName;
 	private ArrayList<Building> building;
-	private ArrayList<Expense> expense;
-	private ArrayList<BuildingExpense> buildingExpense;
+	private ArrayList<Expense<?>> expense;
+	private ArrayList<BuildingExpense<?>> buildingExpense;
 	
 	public Company()
 	{
 		building = new ArrayList<Building>();
-		expense = new ArrayList<Expense>();
-		buildingExpense = new ArrayList<BuildingExpense>();
+		expense = new ArrayList<Expense<?>>();
+		buildingExpense = new ArrayList<BuildingExpense<?>>();
 	}
 	
 	public Company(String brandName)
 	{
 		this.brandName = brandName;
 		building = new ArrayList<Building>();
-		expense = new ArrayList<Expense>();
-		buildingExpense = new ArrayList<BuildingExpense>();
+		expense = new ArrayList<Expense<?>>();
+		buildingExpense = new ArrayList<BuildingExpense<?>>();
 	}
 	
 	public String getBrandName()
@@ -47,7 +47,7 @@ public class Company
 		return true;
 	}
 	
-	public boolean addBuildingExpense(BuildingExpense buildingExpense)
+	public boolean addBuildingExpense(BuildingExpense<?> buildingExpense)
 	{
 		if (buildingExpense == null || buildingExpense.getExpense() == null || buildingExpense.getBuilding() == null) return false;
 		
@@ -56,11 +56,11 @@ public class Company
 		return true;
 	}
 	
-	public ArrayList<Expense> getBuildingExpense(Building building)
+	public ArrayList<Expense<?>> getBuildingExpense(Building building)
 	{
-		ArrayList<Expense> expense = new ArrayList<Expense>();
+		ArrayList<Expense<?>> expense = new ArrayList<Expense<?>>();
 		
-		for (BuildingExpense buildExp : buildingExpense)
+		for (BuildingExpense<?> buildExp : buildingExpense)
 		{
 			if (buildExp.getBuilding() == building) expense.add(buildExp.getExpense());
 		}
@@ -74,7 +74,7 @@ public class Company
 		
 		double totalExpense = 0;
 		
-		for (BuildingExpense buildExp : buildingExpense)
+		for (BuildingExpense<?> buildExp : buildingExpense)
 		{
 			if (buildExp.getBuilding() == building) totalExpense += buildExp.calculateCost();
 		}
@@ -88,7 +88,7 @@ public class Company
 		
 		double totalCost = 0;
 		
-		for (BuildingExpense bExp: buildingExpense)
+		for (BuildingExpense<?> bExp: buildingExpense)
 		{
 			if (bExp.getExpense().getClass() == expenseType)
 			{
@@ -101,7 +101,7 @@ public class Company
 	
 	public boolean checkExpenseCodeAvailability(String code)
 	{
-		for (Expense exp : expense)
+		for (Expense<? extends BuildingExpense<?>> exp : expense)
 		{
 			if (exp.getCode().equals(code)) return false;
 		}

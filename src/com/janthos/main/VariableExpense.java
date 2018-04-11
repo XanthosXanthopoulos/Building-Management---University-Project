@@ -1,6 +1,6 @@
 package com.janthos.main;
 
-public abstract class VariableExpense extends Expense
+public abstract class VariableExpense extends Expense<VariableBuildingExpense>
 {
 	private double pricePerUnit;
 	private String unit;

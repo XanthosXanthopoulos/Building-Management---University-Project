@@ -1,6 +1,6 @@
 package com.janthos.main;
 
-public abstract class Expense 
+public abstract class Expense <T extends BuildingExpense<T>>
 {
 	private String code;
 	private String description;
@@ -13,7 +13,7 @@ public abstract class Expense
 		this.description = description;
 	}
 	
-	public Expense(Expense expense)
+	public Expense(Expense<T> expense)
 	{
 		this.code = expense.code;
 		this.description = expense.description;
@@ -44,5 +44,5 @@ public abstract class Expense
 		return String.format("%-10s", this.getClass().toString().substring(0, this.getClass().toString().length() - 6)) + String.format("%-8s", code) + String.format("%-30s", description);
 	}
 	
-	public abstract double calculateExpense(BuildingExpense buildingExpense);
+	public abstract double calculateExpense(T buildingExpense);
 }

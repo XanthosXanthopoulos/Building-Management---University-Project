@@ -1,6 +1,6 @@
 package com.janthos.main;
 
-public abstract class FixedExpense extends Expense
+public abstract class FixedExpense extends Expense<FixedBuildingExpense>
 {
 	private double pricePerSquareMeter;
 	

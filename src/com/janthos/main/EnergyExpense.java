@@ -28,7 +28,7 @@ public class EnergyExpense extends VariableExpense
 		this.monthlyERTCost = monthlyERTCost;
 	}
 
-	public double calculateExpense(BuildingExpense buildingExpense) 
+	public double calculateExpense(VariableBuildingExpense buildingExpense) 
 	{
 		return getFixedCost() + monthlyERTCost + buildingExpense.getBuilding().getZoneValue() * buildingExpense.getBuilding().getArea() + getPricePerUnit() * buildingExpense.getConsumption();
 	}

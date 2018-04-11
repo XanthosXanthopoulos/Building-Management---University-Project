@@ -14,7 +14,7 @@ public class RentExpense extends FixedExpense
 		super(rentExpense);
 	}
 	
-	public double calculateExpense(BuildingExpense buildingExpense) 
+	public double calculateExpense(FixedBuildingExpense buildingExpense) 
 	{
 		return getPricePerSquareMeter() * buildingExpense.getBuilding().getArea();
 	}

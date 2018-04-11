@@ -101,9 +101,9 @@ public class AccountingDepartment
 		return building;
 	}
 	
-	public static Expense createExpenseFromUserInput()
+	public static Expense<?> createExpenseFromUserInput()
 	{	
-		Expense expense = null;
+		Expense<?> expense = null;
 		
 		System.out.println("Expense Type");
 		System.out.println("1) Water");
@@ -194,9 +194,9 @@ public class AccountingDepartment
 		return expense;
 	}
 	
-	public static BuildingExpense createBuildingExpenseFromUserInput()
+	public static BuildingExpense<?> createBuildingExpenseFromUserInput()
 	{
-		BuildingExpense buildingExpense = null;
+		BuildingExpense<?> buildingExpense = null;
 		
 		System.out.print("Enter building code: ");
 		String code = keyboard.nextLine();
@@ -208,7 +208,7 @@ public class AccountingDepartment
 			building = company.getBuildingByCode(code);
 		}
 		
-		Expense expense = createExpenseFromUserInput();
+		Expense<?> expense = createExpenseFromUserInput();
 		if (expense == null) return null;
 		
 		double consumption = 0;
@@ -218,11 +218,11 @@ public class AccountingDepartment
 			System.out.print("Enter consumption: ");
 			consumption = validDouble(0);
 			keyboard.nextLine();
-			buildingExpense = new BuildingExpense(building, (VariableExpense)expense, consumption);
+			buildingExpense = new VariableBuildingExpense(building, (VariableExpense)expense, consumption);
 		}
 		else if (expense instanceof FixedExpense)
 		{
-			buildingExpense = new BuildingExpense(building, (FixedExpense)expense);
+			buildingExpense = new FixedBuildingExpense(building, (FixedExpense)expense);
 		}
 		
 		
@@ -254,7 +254,7 @@ public class AccountingDepartment
 			building = company.getBuildingByCode(code);
 		}
 		
-		for (Expense expense : company.getBuildingExpense(building))
+		for (Expense<?> expense : company.getBuildingExpense(building))
 		{
 			System.out.println(expense.toString());
 		}
@@ -321,30 +321,30 @@ public class AccountingDepartment
 		company.addBuilding(new Building("B004", "Lab 1", "Thessaloniki A", 20, 100));
 		company.addBuilding(new Building("B005", "Lab 2", "Thessaloniki B", 20, 150));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new WaterExpense("W001", "EYDAP", 0.005, 0.008, 15), 40));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new WaterExpense("W002", "EYDAP", 0.007, 0.01, 15), 15));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new WaterExpense("W003", "EYDAP", 0.01, 0.015, 15), 5));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new WaterExpense("W004", "EYDAP", 0.005, 0.008, 15), 120));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), new WaterExpense("W001", "EYDAP", 0.005, 0.008, 15), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), new WaterExpense("W002", "EYDAP", 0.007, 0.01, 15), 15));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), new WaterExpense("W003", "EYDAP", 0.01, 0.015, 15), 5));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), new WaterExpense("W004", "EYDAP", 0.005, 0.008, 15), 120));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new EnergyExpense("E001", "DEH", 0.005, 30, 15.5), 1600));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new EnergyExpense("E002", "DEH", 0.008, 30, 15.5), 1000));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new EnergyExpense("E003", "HRON", 0.007, 20, 15.5), 150));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new EnergyExpense("E004", "HRON", 0.007, 20, 15.5), 200));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), new EnergyExpense("E001", "DEH", 0.005, 30, 15.5), 1600));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), new EnergyExpense("E002", "DEH", 0.008, 30, 15.5), 1000));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), new EnergyExpense("E003", "HRON", 0.007, 20, 15.5), 150));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), new EnergyExpense("E004", "HRON", 0.007, 20, 15.5), 200));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new TelephoneExpense("T001", "Wind", 0.001, 18, 5.5), 600));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new TelephoneExpense("T002", "OTE", 0.002, 30, 10), 800));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new TelephoneExpense("T003", "Vodafone", 0.0015, 20, 10), 100));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new TelephoneExpense("T004", "Vodafone", 0.0015, 20, 10), 300));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), new TelephoneExpense("T001", "Wind", 0.001, 18, 5.5), 600));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), new TelephoneExpense("T002", "OTE", 0.002, 30, 10), 800));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), new TelephoneExpense("T003", "Vodafone", 0.0015, 20, 10), 100));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), new TelephoneExpense("T004", "Vodafone", 0.0015, 20, 10), 300));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new RentExpense("R001", "Rent description 1", 0.2)));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new RentExpense("R001", "Rent description 2", 0.2)));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(3), new RentExpense("R001", "Rent description 3", 0.25)));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new RentExpense("R001", "Rent description 4", 0.5)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(0), new RentExpense("R001", "Rent description 1", 0.2)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(2), new RentExpense("R001", "Rent description 2", 0.2)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(3), new RentExpense("R001", "Rent description 3", 0.25)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(4), new RentExpense("R001", "Rent description 4", 0.5)));
 		
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(0), new CleaningExpense("C001", "Cleaning description 1", 0.2)));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(1), new CleaningExpense("C002", "Cleaning description 2", 0.15)));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new CleaningExpense("C003", "Cleaning description 3", 0.3)));
-		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new CleaningExpense("C004", "Cleaning description 4", 0.5)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(0), new CleaningExpense("C001", "Cleaning description 1", 0.2)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(1), new CleaningExpense("C002", "Cleaning description 2", 0.15)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(2), new CleaningExpense("C003", "Cleaning description 3", 0.3)));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(4), new CleaningExpense("C004", "Cleaning description 4", 0.5)));
 
 	}
 	

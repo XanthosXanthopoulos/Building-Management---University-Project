@@ -1,28 +1,14 @@
 package com.janthos.main;
 
-public class BuildingExpense 
+public abstract class BuildingExpense<T extends BuildingExpense<T>>
 {
 	private Building building;
-	private Expense expense;
-	private double consumption;
+	private Expense<T> expense;
 	
-	public BuildingExpense() 
-	{
-		consumption = 0;
-	}
-	
-	public BuildingExpense(Building building, FixedExpense expense)
+	public BuildingExpense(Building building, Expense<T> expense)
 	{
 		this.building = building;
 		this.expense = expense;
-		this.consumption = 0;
-	}
-	
-	public BuildingExpense(Building building, VariableExpense expense, double consumption)
-	{
-		this.building = building;
-		this.expense = expense;
-		this.consumption = consumption;
 	}
 	
 	public Building getBuilding()
@@ -30,14 +16,9 @@ public class BuildingExpense
 		return building;
 	}
 	
-	public Expense getExpense()
+	public Expense<T> getExpense()
 	{
 		return expense;
-	}
-	
-	public double getConsumption()
-	{
-		return consumption;
 	}
 	
 	public void setBuilding(Building building)
@@ -45,18 +26,10 @@ public class BuildingExpense
 		this.building = building;
 	}
 	
-	public void setExpense(Expense expense)
+	public void setExpense(Expense<T> expense)
 	{
 		this.expense = expense;
 	}
 	
-	public void setConsumption(double consumption)
-	{
-		this.consumption = consumption;
-	}
-	
-	public double calculateCost()
-	{
-		return expense.calculateExpense(this);
-	}
+	public abstract double calculateCost();
 }
