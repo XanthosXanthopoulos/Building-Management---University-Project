@@ -16,7 +16,7 @@ public class AccountingDepartment
 		System.out.println("Company " + company.getBrandName() + " Building Expense");
 		
 		printMenu();
-		int option = keyboard.nextInt();
+		int option = ValidInt(1, 7);
 		keyboard.nextLine();
 		
 		while (option != 7)
@@ -49,7 +49,7 @@ public class AccountingDepartment
 					System.out.println("Error: Invalid option.");
 			}
 			printMenu();
-			option = keyboard.nextInt();
+			option = ValidInt(1, 7);
 			keyboard.nextLine();
 		}
 	}
@@ -86,10 +86,10 @@ public class AccountingDepartment
 		System.out.print("Enter building address: ");
 		String address = keyboard.nextLine();
 		System.out.print("Enter building zone value: ");
-		double zoneValue = keyboard.nextDouble();
+		double zoneValue = validDouble(0);
 		keyboard.nextLine();
 		System.out.print("Enter building square meters: ");
-		double area = keyboard.nextDouble();
+		double area = validDouble(0);
 		keyboard.nextLine();
 		
 		building = new Building(code, description, address, zoneValue, area);
@@ -112,15 +112,8 @@ public class AccountingDepartment
 		System.out.println("4) Rent");
 		System.out.println("5) Cleaning");
 		System.out.print("Choose an expense type by number: ");
-		int type = keyboard.nextInt();
+		int type = ValidInt(1, 5);
 		keyboard.nextLine();
-		
-		while (type < 1 || type > 5)
-		{
-			System.out.print("Invalid expense type try another one. Expense type: ");
-			type = keyboard.nextInt();
-			keyboard.nextLine();
-		}
 		
 		System.out.print("Enter unique code: ");
 		String code = keyboard.nextLine();
@@ -137,13 +130,13 @@ public class AccountingDepartment
 			case 1:
 			{
 				System.out.print("Enter price per cubic meter (<=100): ");
-				double price1 = keyboard.nextDouble();
+				double price1 = validDouble(0);
 				keyboard.nextLine();
 				System.out.print("Enter price per cubic meter (>100): ");
-				double price2 = keyboard.nextDouble();
+				double price2 = validDouble(0);
 				keyboard.nextLine();
 				System.out.print("Enter fixed cost: ");
-				double fixedCost = keyboard.nextDouble();
+				double fixedCost = validDouble(0);
 				keyboard.nextLine();
 				expense = new WaterExpense(code, description, price1, price2, fixedCost);
 				break;
@@ -151,13 +144,13 @@ public class AccountingDepartment
 			case 2:
 			{
 				System.out.print("Enter price per minute: ");
-				double pricePerMinute = keyboard.nextDouble();
+				double pricePerMinute = validDouble(0);
 				keyboard.nextLine();
 				System.out.print("Enter fixed cost: ");
-				double fixedCost = keyboard.nextDouble();
+				double fixedCost = validDouble(0);
 				keyboard.nextLine();
 				System.out.print("Enter telephone charges: ");
-				double telephoneCharges = keyboard.nextDouble();
+				double telephoneCharges = validDouble(0);
 				keyboard.nextLine();
 				expense = new TelephoneExpense(code, description, pricePerMinute, fixedCost, telephoneCharges);
 				break;
@@ -165,13 +158,13 @@ public class AccountingDepartment
 			case 3:
 			{
 				System.out.print("Enter price per kWh: ");
-				double pricePerKWh = keyboard.nextDouble();
+				double pricePerKWh = validDouble(0);
 				keyboard.nextLine();
 				System.out.print("Enter fixed cost: ");
-				double fixedCost = keyboard.nextDouble();
+				double fixedCost = validDouble(0);
 				keyboard.nextLine();
 				System.out.print("Enter ERT cost: ");
-				double monthlyERTCost = keyboard.nextDouble();
+				double monthlyERTCost = validDouble(0);
 				keyboard.nextLine();
 				expense = new EnergyExpense(code, description, pricePerKWh, fixedCost, monthlyERTCost);
 				break;
@@ -179,7 +172,7 @@ public class AccountingDepartment
 			case 4:
 			{
 				System.out.print("Enter price per square meter: ");
-				double pricePerSquareMeter = keyboard.nextDouble();
+				double pricePerSquareMeter = validDouble(0);
 				keyboard.nextLine();
 				expense = new RentExpense(code, description, pricePerSquareMeter);
 				break;
@@ -187,7 +180,7 @@ public class AccountingDepartment
 			case 5:
 			{
 				System.out.print("Enter price per square meter: ");
-				double pricePerSquareMeter = keyboard.nextDouble();
+				double pricePerSquareMeter = validDouble(0);
 				keyboard.nextLine();
 				expense = new CleaningExpense(code, description, pricePerSquareMeter);
 				break;
@@ -223,7 +216,7 @@ public class AccountingDepartment
 		if (expense instanceof VariableExpense) 
 		{
 			System.out.print("Enter consumption: ");
-			consumption = keyboard.nextDouble();
+			consumption = validDouble(0);
 			keyboard.nextLine();
 			buildingExpense = new BuildingExpense(building, (VariableExpense)expense, consumption);
 		}
@@ -293,16 +286,9 @@ public class AccountingDepartment
 		System.out.println("4) Rent");
 		System.out.println("5) Cleaning");
 		System.out.print("Choose an expense type by number: ");
-		
-		int type = keyboard.nextInt();
+		int type = ValidInt(1, 5);
 		keyboard.nextLine();
 		
-		while (type < 1 || type > 5)
-		{
-			System.out.print("Invalid expense type try another one. Expense type: ");
-			type = keyboard.nextInt();
-			keyboard.nextLine();
-		}
 		Class<?> expenseType = null;
 		
 		switch (type)
@@ -360,5 +346,51 @@ public class AccountingDepartment
 		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(2), new CleaningExpense("C003", "Cleaning description 3", 0.3)));
 		company.addBuildingExpense(new BuildingExpense(company.getBuilding().get(4), new CleaningExpense("C004", "Cleaning description 4", 0.5)));
 
+	}
+	
+	public static int ValidInt(int low, int high)
+	{
+		int number;
+        do 
+        {
+            while (!keyboard.hasNextInt()) 
+            {
+                String input = keyboard.next();
+                System.out.printf("\"%s\" is not a valid number.\n", input);
+            }
+            number = keyboard.nextInt();
+            
+            if (number < low || number > high) 
+            {
+            	System.out.printf("\"%d\" is not a valid number.\n", number);
+            	System.out.print("Action: ");
+            }
+            
+        } while (number < low || number > high);
+
+        return number;
+	}
+	
+	public static double validDouble(double low)
+	{
+		double number;
+        do 
+        {
+            while (!keyboard.hasNextInt()) 
+            {
+                String input = keyboard.next();
+                System.out.printf("\"%s\" is not a valid number.\n", input);
+            }
+            number = keyboard.nextInt();
+            
+            if (number < low) 
+            {
+            	System.out.printf("\"%f\" is not a valid number.\n", number);
+            	System.out.print("Action: ");
+            }
+            
+        } while (number < low);
+
+        return number;
 	}
 }
