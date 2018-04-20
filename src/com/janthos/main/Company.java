@@ -35,6 +35,11 @@ public class Company
 		return building;
 	}
 	
+	public ArrayList<Expense<?>> getExpense()
+	{
+		return expense;
+	}
+	
  	public void setBrandName(String brandName)
 	{
 		this.brandName = brandName;
@@ -47,12 +52,17 @@ public class Company
 		return true;
 	}
 	
+	public boolean addExpense(Expense<?> expense) 
+	{
+		if (expense == null) return false;
+		this.expense.add(expense);
+		return true;
+	}
+	
 	public boolean addBuildingExpense(BuildingExpense<?> buildingExpense)
 	{
 		if (buildingExpense == null || buildingExpense.getExpense() == null || buildingExpense.getBuilding() == null) return false;
-		
 		this.buildingExpense.add(buildingExpense);
-		this.expense.add(buildingExpense.getExpense());
 		return true;
 	}
 	
@@ -82,7 +92,7 @@ public class Company
 		return totalExpense;
 	}
 	
-	public double calculateTotalCostOfExpense(Class<?> expenseType)
+	public double calculateTotalCostOfExpense(Expense<?> expense)
 	{
 		if (expense == null) return -1;
 		
@@ -90,7 +100,7 @@ public class Company
 		
 		for (BuildingExpense<?> bExp: buildingExpense)
 		{
-			if (bExp.getExpense().getClass() == expenseType)
+			if (bExp.getExpense() == expense)
 			{
 				totalCost += bExp.calculateCost();
 			}
@@ -119,9 +129,41 @@ public class Company
 	
 	public Building getBuildingByCode(String code)
 	{
-		for (Building build : building)
+		for (Building building : this.building)
 		{
-			if (build.getCode().equals(code)) return build;
+			if (building.getCode().equals(code)) return building;
+		}
+		return null;
+	}
+	
+	public Expense<?> getExpenseByCode(String code)
+	{
+		for (Expense<?> expense : this.expense)
+		{
+			if (expense.getCode().equals(code)) return expense;
+		}
+		return null;
+	}
+	
+	public ArrayList<Expense<?>> getAvailableExpense(Building building)
+	{
+		ArrayList<Expense<?>> expense = new ArrayList<Expense<?>>(this.expense);
+		
+		for (BuildingExpense<?> buildingExpense : this.buildingExpense)
+		{
+			if (buildingExpense.getBuilding() == building) expense.remove(buildingExpense.getExpense());
+		}
+		
+		return expense;
+	}
+	
+	public Expense<?> getAvailableExpenseByCode(Building building, String code)
+	{
+		ArrayList<Expense<?>> availableExpense = getAvailableExpense(building);
+		
+		for (Expense<?> expense : availableExpense)
+		{
+			if (expense.getCode().equals(code)) return expense;
 		}
 		return null;
 	}

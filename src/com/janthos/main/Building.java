@@ -80,6 +80,6 @@ public class Building
 	
 	public String toString()
 	{
-		return code + " " + description + " " + address + " " + zoneValue + " " + area;		
+		return String.format("%-8s", code) + String.format("%-20s", description) + String.format("%-20s", address) + String.format("%8.3f %3s", zoneValue, "") + String.format("%8.3f %3s", area, "");		
 	}
 }

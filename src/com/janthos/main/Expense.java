@@ -41,7 +41,7 @@ public abstract class Expense <T extends BuildingExpense<T>>
 	
 	public String toString()
 	{
-		return String.format("%-10s", this.getClass().toString().substring(0, this.getClass().toString().length() - 6)) + String.format("%-8s", code) + String.format("%-30s", description);
+		return String.format("%-8s", code) + String.format("%-30s", description);
 	}
 	
 	public abstract double calculateExpense(T buildingExpense);

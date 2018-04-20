@@ -16,7 +16,7 @@ public class AccountingDepartment
 		System.out.println("Company " + company.getBrandName() + " Building Expense");
 		
 		printMenu();
-		int option = ValidInt(1, 7);
+		int option = ValidInt(1, 7, "Action: ");
 		keyboard.nextLine();
 		
 		while (option != 7)
@@ -32,16 +32,16 @@ public class AccountingDepartment
 					else System.out.println("Addition failed.");
 					break;
 				case 3:
-					showBuildings(company);
+					showBuildings();
 					break;
 				case 4:
-					showBuildingExpense(company);
+					showBuildingExpense();
 					break;
 				case 5:
-					showBuildingTotalExpense(company);
+					showBuildingTotalExpense();
 					break;
 				case 6:
-					showExpenseTotalCost(company);
+					showExpenseTotalCost();
 					break;
 				case 7:
 					break;
@@ -49,7 +49,7 @@ public class AccountingDepartment
 					System.out.println("Error: Invalid option.");
 			}
 			printMenu();
-			option = ValidInt(1, 7);
+			option = ValidInt(1, 7, "Action: ");
 			keyboard.nextLine();
 		}
 	}
@@ -86,10 +86,10 @@ public class AccountingDepartment
 		System.out.print("Enter building address: ");
 		String address = keyboard.nextLine();
 		System.out.print("Enter building zone value: ");
-		double zoneValue = validDouble(0);
+		double zoneValue = validDouble(0, "Enter building zone value: ");
 		keyboard.nextLine();
 		System.out.print("Enter building square meters: ");
-		double area = validDouble(0);
+		double area = validDouble(0, "Enter building square meters: ");
 		keyboard.nextLine();
 		
 		building = new Building(code, description, address, zoneValue, area);
@@ -101,102 +101,11 @@ public class AccountingDepartment
 		return building;
 	}
 	
-	public static Expense<?> createExpenseFromUserInput()
-	{	
-		Expense<?> expense = null;
-		
-		System.out.println("Expense Type");
-		System.out.println("1) Water");
-		System.out.println("2) Telephone");
-		System.out.println("3) Energy");
-		System.out.println("4) Rent");
-		System.out.println("5) Cleaning");
-		System.out.print("Choose an expense type by number: ");
-		int type = ValidInt(1, 5);
-		keyboard.nextLine();
-		
-		System.out.print("Enter unique code: ");
-		String code = keyboard.nextLine();
-		while (!company.checkExpenseCodeAvailability(code))
-		{
-			System.out.print("Code already used. Try another one. Expense code: ");
-			code = keyboard.nextLine();
-		}
-		System.out.print("Enter description: ");
-		String description = keyboard.nextLine();
-		
-		switch (type)
-		{
-			case 1:
-			{
-				System.out.print("Enter price per cubic meter (<=100): ");
-				double price1 = validDouble(0);
-				keyboard.nextLine();
-				System.out.print("Enter price per cubic meter (>100): ");
-				double price2 = validDouble(0);
-				keyboard.nextLine();
-				System.out.print("Enter fixed cost: ");
-				double fixedCost = validDouble(0);
-				keyboard.nextLine();
-				expense = new WaterExpense(code, description, price1, price2, fixedCost);
-				break;
-			}
-			case 2:
-			{
-				System.out.print("Enter price per minute: ");
-				double pricePerMinute = validDouble(0);
-				keyboard.nextLine();
-				System.out.print("Enter fixed cost: ");
-				double fixedCost = validDouble(0);
-				keyboard.nextLine();
-				System.out.print("Enter telephone charges: ");
-				double telephoneCharges = validDouble(0);
-				keyboard.nextLine();
-				expense = new TelephoneExpense(code, description, pricePerMinute, fixedCost, telephoneCharges);
-				break;
-			}
-			case 3:
-			{
-				System.out.print("Enter price per kWh: ");
-				double pricePerKWh = validDouble(0);
-				keyboard.nextLine();
-				System.out.print("Enter fixed cost: ");
-				double fixedCost = validDouble(0);
-				keyboard.nextLine();
-				System.out.print("Enter ERT cost: ");
-				double monthlyERTCost = validDouble(0);
-				keyboard.nextLine();
-				expense = new EnergyExpense(code, description, pricePerKWh, fixedCost, monthlyERTCost);
-				break;
-			}
-			case 4:
-			{
-				System.out.print("Enter price per square meter: ");
-				double pricePerSquareMeter = validDouble(0);
-				keyboard.nextLine();
-				expense = new RentExpense(code, description, pricePerSquareMeter);
-				break;
-			}
-			case 5:
-			{
-				System.out.print("Enter price per square meter: ");
-				double pricePerSquareMeter = validDouble(0);
-				keyboard.nextLine();
-				expense = new CleaningExpense(code, description, pricePerSquareMeter);
-				break;
-			}
-		}
-		
-		System.out.println(expense.toString());
-		System.out.print("Add expense Y/N? ");
-		if (keyboard.nextLine().equals("N")) return null;
-		
-		return expense;
-	}
-	
 	public static BuildingExpense<?> createBuildingExpenseFromUserInput()
 	{
 		BuildingExpense<?> buildingExpense = null;
+		
+		showBuildings();
 		
 		System.out.print("Enter building code: ");
 		String code = keyboard.nextLine();
@@ -208,15 +117,29 @@ public class AccountingDepartment
 			building = company.getBuildingByCode(code);
 		}
 		
-		Expense<?> expense = createExpenseFromUserInput();
-		if (expense == null) return null;
+		System.out.println();
 		
-		double consumption = 0;
+		for (Expense<?> expense : company.getAvailableExpense(building))
+		{
+			System.out.println(expense);
+		}
+		
+		System.out.print("Enter expense code: ");
+		code = keyboard.nextLine();
+		Expense<?> expense = company.getAvailableExpenseByCode(building, code);
+		while(expense == null)
+		{
+			System.out.print("Code doesn't exist try another one. Building code: ");
+			code = keyboard.nextLine();
+			expense = company.getAvailableExpenseByCode(building, code);
+		}
+		
+		System.out.println();
 		
 		if (expense instanceof VariableExpense) 
 		{
 			System.out.print("Enter consumption: ");
-			consumption = validDouble(0);
+			double consumption = validDouble(0, "Enter consumption: ");
 			keyboard.nextLine();
 			buildingExpense = new VariableBuildingExpense(building, (VariableExpense)expense, consumption);
 		}
@@ -225,25 +148,28 @@ public class AccountingDepartment
 			buildingExpense = new FixedBuildingExpense(building, (FixedExpense)expense);
 		}
 		
+		System.out.println();
 		
-		
-		System.out.println(buildingExpense.toString());
+		System.out.println(buildingExpense);
 		System.out.print("Add building expense Y/N? ");
-		if (keyboard.nextLine().equals("N")) return null;
+		if (keyboard.nextLine().equalsIgnoreCase("n")) return null;
 		
 		return buildingExpense;
 	}
 	
-	public static void showBuildings(Company company)
+	public static void showBuildings()
 	{
+		System.out.println(String.format("%-8s", "Code") + String.format("%-20s", "Description") + String.format("%-20s", "Address") + String.format("%11s", "Zone Value") + String.format("%8s", "Area"));
 		for (Building building : company.getBuilding())
 		{
-			System.out.println(building.toString());
+			System.out.println(building);
 		}
 	}
 	
-	public static void showBuildingExpense(Company company)
+	public static void showBuildingExpense()
 	{
+		showBuildings();
+		
 		System.out.print("Enter building code: ");
 		String code = keyboard.nextLine();
 		Building building = company.getBuildingByCode(code);
@@ -253,16 +179,18 @@ public class AccountingDepartment
 			code = keyboard.nextLine();
 			building = company.getBuildingByCode(code);
 		}
+		
+		System.out.println();
 		
 		for (Expense<?> expense : company.getBuildingExpense(building))
 		{
-			System.out.println(expense.toString());
+			System.out.println(expense);
 		}
 	}
 	
-	public static void showBuildingTotalExpense(Company company)
+	public static void showBuildingTotalExpense()
 	{
-		showBuildings(company);
+		showBuildings();
 		
 		System.out.print("Enter building code: ");
 		String code = keyboard.nextLine();
@@ -274,43 +202,30 @@ public class AccountingDepartment
 			building = company.getBuildingByCode(code);
 		}
 		
-		System.out.println("The total expense of " + building.getCode() + " is: " + company.caclulateBuildingExpense(building) + " euros.");
+		System.out.println();
+		
+		System.out.println("The total expense of " + building.getCode() + " is: " + String.format("%.3f", company.caclulateBuildingExpense(building)) + " euros.");
 	}
 	
-	public static void showExpenseTotalCost(Company company)
+	public static void showExpenseTotalCost()
 	{
-		System.out.println("Expense Type");
-		System.out.println("1) Water");
-		System.out.println("2) Telephone");
-		System.out.println("3) Energy");
-		System.out.println("4) Rent");
-		System.out.println("5) Cleaning");
-		System.out.print("Choose an expense type by number: ");
-		int type = ValidInt(1, 5);
-		keyboard.nextLine();
-		
-		Class<?> expenseType = null;
-		
-		switch (type)
+		for (Expense<?> expense : company.getExpense())
 		{
-			case 1:
-				expenseType = WaterExpense.class;
-				break;
-			case 2:
-				expenseType = TelephoneExpense.class;
-				break;
-			case 3:
-				expenseType = EnergyExpense.class;
-				break;
-			case 4:
-				expenseType = RentExpense.class;
-				break;
-			case 5:
-				expenseType = CleaningExpense.class;
-				break;
+			System.out.println(expense);
 		}
 		
-		System.out.println("The total cost for " +  expenseType.toString() + " is: " + company.calculateTotalCostOfExpense(expenseType) + " euros.");
+		System.out.println("Enter expense code: ");
+		String code = keyboard.nextLine();
+		Expense<?> expense = company.getExpenseByCode(code);
+		while(expense == null)
+		{
+			System.out.print("Code doesn't exist try another one. Building code: ");
+			code = keyboard.nextLine();
+			expense = company.getExpenseByCode(code);
+		}
+
+		System.out.println();
+		System.out.println("The total cost for " +  expense.getDescription() + " is: " + String.format("%.3f" , company.calculateTotalCostOfExpense(expense)) + " euros.");
 	}
 	
 	public static void init()
@@ -321,34 +236,37 @@ public class AccountingDepartment
 		company.addBuilding(new Building("B004", "Lab 1", "Thessaloniki A", 20, 100));
 		company.addBuilding(new Building("B005", "Lab 2", "Thessaloniki B", 20, 150));
 		
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), new WaterExpense("W001", "EYDAP", 0.005, 0.008, 15), 40));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), new WaterExpense("W002", "EYDAP", 0.007, 0.01, 15), 15));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), new WaterExpense("W003", "EYDAP", 0.01, 0.015, 15), 5));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), new WaterExpense("W004", "EYDAP", 0.005, 0.008, 15), 120));
+		company.addExpense(new WaterExpense("W001", "EYDAP", 0.005, 0.008, 15));
+		company.addExpense(new EnergyExpense("E001", "DEH", 0.005, 30, 15.5));
+		company.addExpense(new EnergyExpense("E002", "HRON", 0.007, 20, 15.5));
+		company.addExpense(new TelephoneExpense("T001", "OTE", 0.002, 30, 10));
+		company.addExpense(new TelephoneExpense("T002", "Vodafone", 0.0015, 20, 10));
+		company.addExpense(new RentExpense("R001", "Rent description 1", 0.2));
+		company.addExpense(new CleaningExpense("C001", "Cleaning description 1", 0.2));
 		
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), new EnergyExpense("E001", "DEH", 0.005, 30, 15.5), 1600));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), new EnergyExpense("E002", "DEH", 0.008, 30, 15.5), 1000));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), new EnergyExpense("E003", "HRON", 0.007, 20, 15.5), 150));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), new EnergyExpense("E004", "HRON", 0.007, 20, 15.5), 200));
-		
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), new TelephoneExpense("T001", "Wind", 0.001, 18, 5.5), 600));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), new TelephoneExpense("T002", "OTE", 0.002, 30, 10), 800));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), new TelephoneExpense("T003", "Vodafone", 0.0015, 20, 10), 100));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), new TelephoneExpense("T004", "Vodafone", 0.0015, 20, 10), 300));
-		
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(0), new RentExpense("R001", "Rent description 1", 0.2)));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(2), new RentExpense("R001", "Rent description 2", 0.2)));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(3), new RentExpense("R001", "Rent description 3", 0.25)));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(4), new RentExpense("R001", "Rent description 4", 0.5)));
-		
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(0), new CleaningExpense("C001", "Cleaning description 1", 0.2)));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(1), new CleaningExpense("C002", "Cleaning description 2", 0.15)));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(2), new CleaningExpense("C003", "Cleaning description 3", 0.3)));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(4), new CleaningExpense("C004", "Cleaning description 4", 0.5)));
-
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(0), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(1), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(2), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(3), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(0), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(1), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(2), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(4), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(1), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(2), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(3), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(4), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), (VariableExpense)company.getExpense().get(2), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), (VariableExpense)company.getExpense().get(3), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), (VariableExpense)company.getExpense().get(4), 40));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(3), (FixedExpense)company.getExpense().get(5)));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), (VariableExpense)company.getExpense().get(1), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), (VariableExpense)company.getExpense().get(3), 40));
+		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), (VariableExpense)company.getExpense().get(4), 40));
+		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(4), (FixedExpense)company.getExpense().get(5)));
 	}
 	
-	public static int ValidInt(int low, int high)
+	public static int ValidInt(int low, int high, String prompt)
 	{
 		int number;
         do 
@@ -357,13 +275,14 @@ public class AccountingDepartment
             {
                 String input = keyboard.next();
                 System.out.printf("\"%s\" is not a valid number.\n", input);
+                System.out.print(prompt);
             }
             number = keyboard.nextInt();
             
             if (number < low || number > high) 
             {
             	System.out.printf("\"%d\" is not a valid number.\n", number);
-            	System.out.print("Action: ");
+            	System.out.print(prompt);
             }
             
         } while (number < low || number > high);
@@ -371,22 +290,23 @@ public class AccountingDepartment
         return number;
 	}
 	
-	public static double validDouble(double low)
+	public static double validDouble(double low, String prompt)
 	{
 		double number;
         do 
         {
-            while (!keyboard.hasNextInt()) 
+            while (!keyboard.hasNextDouble()) 
             {
                 String input = keyboard.next();
                 System.out.printf("\"%s\" is not a valid number.\n", input);
+                System.out.print(prompt);
             }
-            number = keyboard.nextInt();
+            number = keyboard.nextDouble();
             
             if (number < low) 
             {
             	System.out.printf("\"%f\" is not a valid number.\n", number);
-            	System.out.print("Action: ");
+            	System.out.print(prompt);
             }
             
         } while (number < low);

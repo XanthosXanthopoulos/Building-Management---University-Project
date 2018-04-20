@@ -31,5 +31,10 @@ public abstract class BuildingExpense<T extends BuildingExpense<T>>
 		this.expense = expense;
 	}
 	
+	public String toString()
+	{
+		return getExpense().toString();
+	}
+	
 	public abstract double calculateCost();
 }

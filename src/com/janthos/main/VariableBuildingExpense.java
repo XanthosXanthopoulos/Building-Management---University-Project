@@ -4,7 +4,7 @@ public class VariableBuildingExpense extends BuildingExpense<VariableBuildingExp
 {
 	private double consumption;
 	
-	public VariableBuildingExpense(Building building, VariableExpense expense, double consumption)
+	public VariableBuildingExpense(Building building, Expense<VariableBuildingExpense> expense, double consumption)
 	{
 		super(building, expense);
 		this.consumption = consumption;
@@ -23,5 +23,10 @@ public class VariableBuildingExpense extends BuildingExpense<VariableBuildingExp
 	public double calculateCost()
 	{
 		return getExpense().calculateExpense(this);
+	}
+	
+	public String toString()
+	{
+		return super.toString() + String.format("  %.3f", consumption);
 	}
 }
