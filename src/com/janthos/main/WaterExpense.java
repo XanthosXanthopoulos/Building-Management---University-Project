@@ -42,6 +42,6 @@ public class WaterExpense extends VariableExpense
 	
 	public String toString()
 	{
-		return super.toString() + String.format("Cost per %-5s (>100):  %.3f", getUnit(), pricePerUnit_2);
+		return super.toString() + String.format("%5s Cost per %-5s (>100):  %.3f", "", getUnit(), pricePerUnit_2);
 	}
 }

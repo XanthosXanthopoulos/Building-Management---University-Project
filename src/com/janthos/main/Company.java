@@ -78,7 +78,7 @@ public class Company
 		return expense;
 	}
 	
-	public double caclulateBuildingExpense(Building building)
+	public double calculateBuildingExpense(Building building)
 	{
 		if (building == null) return -1;
 		
@@ -109,7 +109,7 @@ public class Company
 		return totalCost;
 	}
 	
-	public boolean checkExpenseCodeAvailability(String code)
+	public boolean checkExpenseCodeAvailability(String code) //Will be used when we want to add the expenses from a file to check if duplicate codes exist
 	{
 		for (Expense<? extends BuildingExpense<?>> exp : expense)
 		{

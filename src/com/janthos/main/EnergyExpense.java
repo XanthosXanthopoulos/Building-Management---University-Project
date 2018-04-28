@@ -35,6 +35,6 @@ public class EnergyExpense extends VariableExpense
 	
 	public String toString()
 	{
-		return super.toString() + String.format("ERT monthly cost: %.3f", monthlyERTCost);
+		return super.toString() + String.format("%5s ERT monthly cost: %.3f", "", monthlyERTCost);
 	}
 }

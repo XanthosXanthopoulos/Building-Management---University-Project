@@ -14,7 +14,6 @@ public class CleaningExpense extends FixedExpense
 		super(cleaningExpense);
 	}
 	
-	
 	public double calculateExpense(FixedBuildingExpense buildingExpense) 
 	{
 		return getPricePerSquareMeter() * buildingExpense.getBuilding().getArea();

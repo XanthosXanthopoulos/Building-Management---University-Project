@@ -56,6 +56,6 @@ public abstract class VariableExpense extends Expense<VariableBuildingExpense>
 	
 	public String toString()
 	{
-		return super.toString() + String.format("%.3f", pricePerUnit) + String.format(" per %-5s ", unit) + String.format("%.3f ", fixedCost); 
+		return super.toString() + String.format("%.3f", pricePerUnit) + String.format(" per %-5s ", unit) + String.format("%.3f ", fixedCost);
 	}
 }

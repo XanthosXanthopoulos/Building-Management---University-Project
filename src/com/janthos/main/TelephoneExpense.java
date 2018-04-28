@@ -35,6 +35,6 @@ public class TelephoneExpense extends VariableExpense
 	
 	public String toString()
 	{
-		return super.toString() + String.format("Monthly telephone charges: %.3f", telephoneCharges);
+		return super.toString() + String.format("%5s Monthly telephone charges: %.3f", "", telephoneCharges);
 	}
 }
