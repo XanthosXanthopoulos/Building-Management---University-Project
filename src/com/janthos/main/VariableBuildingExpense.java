@@ -33,7 +33,7 @@ public class VariableBuildingExpense extends BuildingExpense<VariableBuildingExp
 	
 	public String toString()
 	{
-		return super.toString() + String.format("  %.3f", consumption);
+		return super.toString() + String.format("%-10s  %.3f", "", consumption);
 	}
 	
 	public VariableBuildingExpense parseBuildingExpense(BufferedReader reader, Expense<VariableBuildingExpense> expense, Building building, Logger logger) 
@@ -62,7 +62,7 @@ public class VariableBuildingExpense extends BuildingExpense<VariableBuildingExp
 				{
 					try
 					{
-						System.out.println(line.trim().substring(12).trim());
+						consumption = Double.parseDouble(line.trim().substring(12).trim());
 					}
 					catch (NumberFormatException e)
 					{

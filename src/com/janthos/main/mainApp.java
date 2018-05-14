@@ -190,10 +190,10 @@ public class mainApp
 		
 		System.out.println();
 
-		System.out.println(String.format("%-8s", "Code") + String.format("%-20s", "Description") + String.format("%-16s", "Price per unit") + String.format("%-13s", "Fixed cost") + String.format("%8s", "Additional cost"));
-		for (Expense<?> expense : company.getBuildingExpense(building))
+		System.out.println(String.format("%-8s", "Code") + String.format("%-20s", "Description") + String.format("%-16s", "Price per unit") + String.format("%-13s", "Fixed cost") + String.format("%-35s", "Additional cost") + String.format("%-13s", "Consumption"));
+		for (BuildingExpense<?> buildingExpense : building.getBuildingExpense())
 		{
-			System.out.println(expense);
+			System.out.println(buildingExpense);
 		}
 	}
 	
