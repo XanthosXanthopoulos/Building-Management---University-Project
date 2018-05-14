@@ -1,5 +1,6 @@
 package com.janthos.main;
 
+import java.io.*;
 import java.util.Scanner;
 
 public class mainApp
@@ -11,7 +12,8 @@ public class mainApp
 	{
 		company = new Company("ABC Inc.");
 		
-		init();
+		loadExpenses("Expenses.txt");
+		loadBuildings("Buildings.txt");
 		
 		System.out.println("Company " + company.getBrandName() + " Building Expense");
 		
@@ -47,6 +49,14 @@ public class mainApp
 			}
 			printMenu();
 			option = ValidInt(1, 7, "Action: ");
+		}
+		
+		System.out.print("Save changes (Anything other than Y or y cancels addition)? ");
+		if (keyboard.nextLine().equalsIgnoreCase("y"))
+		{
+			SaveExpenses("Expenses.txt");
+			SaveBuildings("Buildings.txt");
+			System.out.println("Files saved.");
 		}
 	}
 	
@@ -223,45 +233,251 @@ public class mainApp
 		System.out.println("The total cost for " +  expense.getDescription() + " is: " + String.format("%.3f" , company.calculateTotalCostOfExpense(expense)) + " euros.");
 	}
 	
-	public static void init()
+	public static void loadExpenses(String filePath)
 	{
-		//Adding buildings
-		company.addBuilding(new Building("B001", "University", "Athens A", 10, 400));
-		company.addBuilding(new Building("B002", "Library", "Athens B", 5, 200));
-		company.addBuilding(new Building("B003", "Prof Office", "Piraeus", 10, 50));
-		company.addBuilding(new Building("B004", "Lab 1", "Thessaloniki A", 20, 100));
-		company.addBuilding(new Building("B005", "Lab 2", "Thessaloniki B", 20, 150));
+		File file = null;
+		BufferedReader reader = null;
+		String line = null;
 		
-		//Adding expense types
-		company.addExpense(new WaterExpense("W001", "EYDAP", 0.005, 0.008, 15));
-		company.addExpense(new EnergyExpense("E001", "DEH", 0.005, 30, 15.5));
-		company.addExpense(new EnergyExpense("E002", "HRON", 0.007, 20, 15.5));
-		company.addExpense(new TelephoneExpense("T001", "OTE", 0.002, 30, 10));
-		company.addExpense(new TelephoneExpense("T002", "Vodafone", 0.0015, 20, 10));
-		company.addExpense(new RentExpense("R001", "Rent Comp", 0.2));
-		company.addExpense(new CleaningExpense("C001", "Cleaning comp", 0.2));
+		Logger logger = new Logger();
+
+		try
+		{
+			file = new File(filePath);
+		}
+		catch (NullPointerException e)
+		{
+			logger.appendMessage("File not found");
+			return;
+		}
 		
-		//Adding expenses
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(0), 40));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(1), 200));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(2), 70));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(0), (VariableExpense)company.getExpense().get(3), 600));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(0), 30));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(1), 170));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(2), 20));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(1), (VariableExpense)company.getExpense().get(4), 460));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(1), 30));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(2), 5));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(3), 230));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(2), (VariableExpense)company.getExpense().get(4), 60));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), (VariableExpense)company.getExpense().get(2), 140));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), (VariableExpense)company.getExpense().get(3), 40));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(3), (VariableExpense)company.getExpense().get(4), 70));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(3), (FixedExpense)company.getExpense().get(5)));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), (VariableExpense)company.getExpense().get(1), 230));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), (VariableExpense)company.getExpense().get(3), 30));
-		company.addBuildingExpense(new VariableBuildingExpense(company.getBuilding().get(4), (VariableExpense)company.getExpense().get(4), 70));
-		company.addBuildingExpense(new FixedBuildingExpense(company.getBuilding().get(4), (FixedExpense)company.getExpense().get(5)));
+		try
+		{
+			reader = new BufferedReader(new FileReader(file));
+		}
+		catch (FileNotFoundException e)
+		{
+			logger.appendMessage("Error opening file");
+			return;
+		}
+		
+		try
+		{
+			line = reader.readLine();
+			logger.incrementLine();
+			while(line != null)
+			{
+				if (line != null && line.matches("(?i)\\s*expense_type_list\\s*"))
+				{
+					line = reader.readLine();
+					logger.incrementLine();
+					if (line != null && line.matches("\\s*\\{\\s*"))
+					{
+						line = reader.readLine();
+						logger.incrementLine();
+						while (line != null && !line.matches("(?i)\\s*\\{\\s*|\\s*\\}\\s*|\\s*expense_type_list\\s*"))
+						{
+							if (line != null && line.matches("(?i)\\s*expense_type\\s*"))
+							{
+								Expense<?> expense = Expense.parse(reader, logger);
+								if (expense != null && company.checkExpenseCodeAvailability(expense.getCode()))
+								{
+									company.addExpense(expense);
+								}
+								
+								line = reader.readLine();
+								logger.incrementLine();
+							}
+							else if (line != null && line.matches("\\s*"))
+							{
+								line = reader.readLine();
+								logger.incrementLine();
+							}
+							else throw new IOException();
+						}
+						line = reader.readLine();
+						logger.incrementLine();
+					}
+					else if (line != null && line.matches("\\s*"))
+					{
+						line = reader.readLine();
+						logger.incrementLine();
+					}
+					else throw new IOException();
+				}
+				else if (line != null && line.matches("\\s*"))
+				{
+					line = reader.readLine();
+					logger.incrementLine();
+				}
+				else throw new IOException();
+			}
+		}
+		catch (IOException e)
+		{
+			logger.appendMessage("Error reading file");
+		}
+		finally
+		{
+			System.out.println(logger.getLog());
+			try
+			{
+				reader.close();
+			}
+			catch (IOException e)
+			{
+				logger.appendMessage("Error clossing file");
+			}
+		}
+	}
+	
+	public static void loadBuildings(String filePath)
+	{
+		File file = null;
+		BufferedReader reader = null;
+		String line = null;
+		
+		Logger logger = new Logger();
+		
+		try
+		{
+			file = new File(filePath);
+		}
+		catch (NullPointerException e)
+		{
+			logger.appendMessage("File not found");
+			return;
+		}
+		
+		try
+		{
+			reader = new BufferedReader(new FileReader(file));
+		}
+		catch (FileNotFoundException e)
+		{
+			logger.appendMessage("Error opening file");
+			return;
+		}
+		
+		try
+		{
+			line = reader.readLine();
+			logger.incrementLine();
+			
+			while (line != null)
+			{
+				if (line != null && line.matches("(?i)\\s*building_list\\s*"))
+				{
+					line = reader.readLine();
+					logger.incrementLine();
+					if (line != null && line.matches("\\s*\\{\\s*"))
+					{
+						line = reader.readLine();
+						logger.incrementLine();
+						while (line != null && !line.matches("(?i)\\s*\\{\\s*|\\s*\\}\\s*|\\s*building_list\\s*"))
+						{
+							if (line != null && line.matches("(?i)\\s*building\\s*"))
+							{
+								Building building = Building.parse(reader, company.getExpense(), logger);
+								if (building != null && company.checkBuildingCodeAvailability(building.getCode()))
+								{
+									company.addBuilding(building);
+								}
+								
+								line = reader.readLine();
+								logger.incrementLine();
+							}
+							else if (line != null && line.matches("\\s*"))
+							{
+								line = reader.readLine();
+								logger.incrementLine();
+							}
+							else throw new IOException();
+						}
+						line = reader.readLine();
+						logger.incrementLine();
+					}
+					else if (line != null && line.matches("\\s*"))
+					{
+						line = reader.readLine();
+						logger.incrementLine();
+					}
+					else throw new IOException();
+				}
+				else if (line != null && line.matches("\\s*"))
+				{
+					line = reader.readLine();
+					logger.incrementLine();
+				}
+				else throw new IOException();
+			}
+		}
+		catch (IOException e)
+		{
+			logger.appendMessage("Error reading file");
+		}
+		finally
+		{
+			System.out.println(logger.getLog());
+			try
+			{
+				reader.close();
+			}
+			catch (IOException e)
+			{
+				logger.appendMessage("Error closing file");
+			}
+		}
+	}
+	
+	public static void SaveExpenses(String filePath)
+	{
+		PrintWriter writer = null;
+		
+		try
+		{
+			writer = new PrintWriter(new FileWriter(filePath), true);
+			writer.println("EXPENSE_TYPE_LIST");
+			writer.println("{");
+			for (Expense<?> expense : company.getExpense())
+			{
+				expense.printFile(writer);
+			}
+			writer.println("}");
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error writing file");
+		}
+		finally
+		{
+			writer.close();
+		}
+	}
+	
+	public static void SaveBuildings(String filePath)
+	{
+		PrintWriter writer = null;
+		
+		try
+		{
+			writer = new PrintWriter(new FileWriter(filePath), true);
+			writer.println("BUILDING_LIST");
+			writer.println("{");
+			for (Building building : company.getBuilding())
+			{
+				building.printBuilding(writer);
+			}
+			writer.println("}");
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error writing file");
+		}
+		finally
+		{
+			writer.close();
+		}
 	}
 	
 	public static int ValidInt(int low, int high, String prompt) //Low and High are inclusive

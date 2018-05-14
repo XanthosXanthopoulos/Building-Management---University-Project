@@ -49,6 +49,10 @@ public class Company
 	{
 		if (building == null) return false;
 		this.building.add(building);
+		for (BuildingExpense<?> buildExp : building.getBuildingExpense())
+		{
+			buildingExpense.add(buildExp);
+		}
 		return true;
 	}
 	
@@ -62,6 +66,7 @@ public class Company
 	public boolean addBuildingExpense(BuildingExpense<?> buildingExpense)
 	{
 		if (buildingExpense == null || buildingExpense.getExpense() == null || buildingExpense.getBuilding() == null) return false;
+		buildingExpense.getBuilding().addBuildingExpense(buildingExpense);
 		this.buildingExpense.add(buildingExpense);
 		return true;
 	}
