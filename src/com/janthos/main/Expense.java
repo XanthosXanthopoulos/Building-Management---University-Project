@@ -117,27 +117,27 @@ public abstract class Expense <T extends BuildingExpense<T>>
 				{
 					if (hasCode && hasDescr && hasType)
 					{
-						if (type.matches("(?i)\\s*type\\s+waterexpense\\s*"))
+						if (type.matches("(?i)\\s*type\\s+water\\s*"))
 						{
 							reader.reset();
 							expense = new WaterExpense().parseExpense(reader, logger);
 						}
-						else if (type.matches("(?i)\\s*type\\s+energyexpense\\s*"))
+						else if (type.matches("(?i)\\s*type\\s+energy\\s*"))
 						{
 							reader.reset();
 							expense = new EnergyExpense().parseExpense(reader, logger);
 						}
-						else if (type.matches("(?i)\\s*type\\s+telephoneexpense\\s*"))
+						else if (type.matches("(?i)\\s*type\\s+telephone\\s*"))
 						{
 							reader.reset();
 							expense = new TelephoneExpense().parseExpense(reader, logger);
 						}
-						else if (type.matches("(?i)\\s*type\\s+rentexpense\\s*"))
+						else if (type.matches("(?i)\\s*type\\s+rent\\s*"))
 						{
 							reader.reset();
 							expense = new RentExpense().parseExpense(reader, logger);
 						}
-						else if (type.matches("(?i)\\s*type\\s+cleaningexpense\\s*"))
+						else if (type.matches("(?i)\\s*type\\s+cleaning\\s*"))
 						{
 							reader.reset();
 							expense = new CleaningExpense().parseExpense(reader, logger);

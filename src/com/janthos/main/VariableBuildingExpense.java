@@ -52,17 +52,17 @@ public class VariableBuildingExpense extends BuildingExpense<VariableBuildingExp
 			{
 				if (line.matches("(?i)\\s*type\\s+\\S+\\s*"))
 				{
-					if (!line.trim().substring(5).trim().equalsIgnoreCase(expense.getClass().getSimpleName()))
+					if (!line.trim().substring(5).trim().equalsIgnoreCase(expense.getClass().getSimpleName().substring(0, expense.getClass().getSimpleName().length() - 7)))
 					{
 						typeMatch = false;
 						logger.appendMessage("Expense type and code doesn't match");
 					}
 				}
-				else if (line.matches("(?i)\\s*\\consumption\\s+\\S+\\s*"))
+				else if (line.matches("(?i)\\s*consumption\\s+\\S+\\s*"))
 				{
 					try
 					{
-						consumption = Double.parseDouble(line.trim().substring(12).trim());
+						System.out.println(line.trim().substring(12).trim());
 					}
 					catch (NumberFormatException e)
 					{
@@ -95,7 +95,7 @@ public class VariableBuildingExpense extends BuildingExpense<VariableBuildingExp
 		writer.println("\t\t\tEXPENSE");
 		writer.println("\t\t\t{");
 		writer.println("\t\t\t\tEXPENSE_TYPE_CODE " + getExpense().getCode());
-		writer.println("\t\t\t\tTYPE " + getExpense().getClass().getSimpleName());
+		writer.println("\t\t\t\tTYPE " + getExpense().getClass().getSimpleName().substring(0, getExpense().getClass().getSimpleName().length() - 7));
 		writer.println("\t\t\t\tCONSUMPTION " + getConsumption());
 		writer.println("\t\t\t}");
 	}

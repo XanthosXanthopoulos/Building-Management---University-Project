@@ -87,7 +87,7 @@ public class CleaningExpense extends FixedExpense
 		writer.println("\t{");
 		writer.println("\t\tEXPENSE_TYPE_CODE " + getCode());
 		writer.println("\t\tEXPENSE_TYPE_DESCR " + getDescription());
-		writer.println("\t\tTYPE CleaningExpense");
+		writer.println("\t\tTYPE Cleaning");
 		writer.println("\t\tPRICE_PER_SQUARE_METER " + getPricePerSquareMeter());
 		writer.println("\t}");
 	}

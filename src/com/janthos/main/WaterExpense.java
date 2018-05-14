@@ -135,7 +135,7 @@ public class WaterExpense extends VariableExpense
 		writer.println("\t{");
 		writer.println("\t\tEXPENSE_TYPE_CODE " + getCode());
 		writer.println("\t\tEXPENSE_TYPE_DESCR " + getDescription());
-		writer.println("\t\tTYPE WaterExpense");
+		writer.println("\t\tTYPE Water");
 		writer.println("\t\tUNIT " + getUnit());
 		writer.println("\t\tPRICE_PER_UNIT " + getPricePerUnit());
 		writer.println("\t\tPRICE_PER_UNIT_2 " + getPricePerUnit_2());

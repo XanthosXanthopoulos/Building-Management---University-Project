@@ -171,6 +171,11 @@ public class mainApp
 	
 	public static void showBuildingExpense()
 	{
+		if (company.getBuilding().size() == 0)
+		{
+			System.out.println("There are no buildings added yet.");
+			return;
+		}
 		showBuildings();
 		
 		System.out.print("Enter building code: ");
@@ -194,6 +199,11 @@ public class mainApp
 	
 	public static void showBuildingTotalExpense()
 	{
+		if (company.getBuilding().size() == 0)
+		{
+			System.out.println("There are no buildings added yet.");
+			return;
+		}
 		showBuildings();
 		
 		System.out.print("Enter building code: ");
@@ -213,6 +223,11 @@ public class mainApp
 	
 	public static void showExpenseTotalCost()
 	{
+		if (company.getExpense().size() == 0)
+		{
+			System.out.println("There are no expenses added yet.");
+			return;
+		}
 		System.out.println(String.format("%-8s", "Code") + String.format("%-20s", "Description") + String.format("%-16s", "Price per unit") + String.format("%-13s", "Fixed cost") + String.format("%8s", "Additional cost"));
 		for (Expense<?> expense : company.getExpense())
 		{
@@ -240,6 +255,7 @@ public class mainApp
 		String line = null;
 		
 		Logger logger = new Logger();
+		logger.appendMessage("Begining Expense parsing");
 
 		try
 		{
@@ -319,6 +335,7 @@ public class mainApp
 		}
 		finally
 		{
+			logger.appendMessage("Parsing ended");
 			System.out.println(logger.getLog());
 			try
 			{
@@ -338,6 +355,7 @@ public class mainApp
 		String line = null;
 		
 		Logger logger = new Logger();
+		logger.appendMessage("Begining Building parsing");
 		
 		try
 		{
@@ -418,6 +436,7 @@ public class mainApp
 		}
 		finally
 		{
+			logger.appendMessage("Parsing ended");
 			System.out.println(logger.getLog());
 			try
 			{

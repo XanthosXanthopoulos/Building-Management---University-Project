@@ -131,7 +131,7 @@ public class TelephoneExpense extends VariableExpense
 		writer.println("\t{");
 		writer.println("\t\tEXPENSE_TYPE_CODE " + getCode());
 		writer.println("\t\tEXPENSE_TYPE_DESCR " + getDescription());
-		writer.println("\t\tTYPE TelephoneExpense");
+		writer.println("\t\tTYPE Telephone");
 		writer.println("\t\tUNIT " + getUnit());
 		writer.println("\t\tPRICE_PER_UNIT " + getPricePerUnit());
 		writer.println("\t\tFIXED_COST " + getFixedCost());

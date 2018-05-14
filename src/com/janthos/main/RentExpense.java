@@ -84,7 +84,7 @@ public class RentExpense extends FixedExpense
 		writer.println("\t{");
 		writer.println("\t\tEXPENSE_TYPE_CODE " + getCode());
 		writer.println("\t\tEXPENSE_TYPE_DESCR " + getDescription());
-		writer.println("\t\tTYPE RentExpense");
+		writer.println("\t\tTYPE Rent");
 		writer.println("\t\tPRICE_PER_SQUARE_METER " + getPricePerSquareMeter());
 		writer.println("\t}");
 	}
