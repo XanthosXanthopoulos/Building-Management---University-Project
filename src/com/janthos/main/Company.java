@@ -40,6 +40,11 @@ public class Company
 		return expense;
 	}
 	
+	public ArrayList<BuildingExpense<?>> getBuildingExpense()
+	{
+		return buildingExpense;
+	}
+	
  	public void setBrandName(String brandName)
 	{
 		this.brandName = brandName;
@@ -71,7 +76,19 @@ public class Company
 		return true;
 	}
 	
-	public ArrayList<Expense<?>> getBuildingExpense(Building building)
+	public ArrayList<BuildingExpense<?>> getBuildingExpensesOfBuilding(Building building)
+	{
+		ArrayList<BuildingExpense<?>> buildingExpense = new ArrayList<BuildingExpense<?>>();
+		
+		for (BuildingExpense<?> buildExp : this.buildingExpense)
+		{
+			if (buildExp.getBuilding() == building) buildingExpense.add(buildExp);
+		}
+		
+		return buildingExpense;
+	}
+	
+	public ArrayList<Expense<?>> getExpensesOfBuilding(Building building)
 	{
 		ArrayList<Expense<?>> expense = new ArrayList<Expense<?>>();
 		
@@ -114,13 +131,23 @@ public class Company
 		return totalCost;
 	}
 	
-	public boolean checkExpenseCodeAvailability(String code) //Will be used when we want to add the expenses from a file to check if duplicate codes exist
+	public boolean checkExpenseCodeAvailability(String code)
 	{
 		for (Expense<? extends BuildingExpense<?>> exp : expense)
 		{
 			if (exp.getCode().equals(code)) return false;
 		}
 		return true;
+	}
+	
+	public BuildingExpense<?> getBuildingExpenseOfBuilding(Building building, Expense<?> expense)
+	{		
+		for (BuildingExpense<?> buildingExpense : this.buildingExpense)
+		{
+			if (buildingExpense.getBuilding() == building && buildingExpense.getExpense() == expense) return buildingExpense;
+		}
+			
+		return null;
 	}
 	
 	public boolean checkBuildingCodeAvailability(String code)
