@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +20,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
@@ -59,10 +63,35 @@ public class MainForm extends JFrame
 			e.printStackTrace();
 		}
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(600, 400));
 		setTitle(company.getBrandName() + " Expense Manager");
+		
+		//Set closing window event handler - Begin
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) 
+			{
+				int result = JOptionPane.showConfirmDialog(thisFrame, "Save changes?", "Exit Without Saving", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION)
+				{
+					JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
+					fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "text"));
+					fileChooser.setDialogTitle("Save Buildings");
+					int returnValue = fileChooser.showSaveDialog(null);
+					
+					if (returnValue == JFileChooser.APPROVE_OPTION) {
+						File selectedFile = fileChooser.getSelectedFile();
+						Logger logger = new Logger();
+						SaveBuildings(selectedFile.getAbsolutePath(), company, logger);
+						JOptionPane.showMessageDialog(thisFrame, logger.getLog(), "Saving Info", JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+				thisFrame.dispose();
+				System.exit(0);
+		    }
+		});
+		//Set closing window event handler - End
 		
 		//Initialize - Begin
 		menuBar = new JMenuBar();
@@ -115,6 +144,7 @@ public class MainForm extends JFrame
 			{
 				JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
 				fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "text"));
+				fileChooser.setDialogTitle("Open Expenses");
 				int returnValue = fileChooser.showOpenDialog(null);
 				
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -145,6 +175,7 @@ public class MainForm extends JFrame
 			{
 				JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
 				fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "text"));
+				fileChooser.setDialogTitle("Open Buildings");
 				int returnValue = fileChooser.showOpenDialog(null);
 				
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -172,6 +203,7 @@ public class MainForm extends JFrame
 			{
 				JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
 				fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "text"));
+				fileChooser.setDialogTitle("Save Expenses");
 				int returnValue = fileChooser.showSaveDialog(null);
 				
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -179,7 +211,7 @@ public class MainForm extends JFrame
 					Logger logger = new Logger();
 					SaveExpenses(selectedFile.getAbsolutePath(), company, logger);
 					JOptionPane.showMessageDialog(thisFrame, logger.getLog(), "Saving Info", JOptionPane.PLAIN_MESSAGE);
-				}	
+				}
 			}
 		});
 		//saveExpenseMenuItem - End
@@ -193,6 +225,7 @@ public class MainForm extends JFrame
 			{
 				JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
 				fileChooser.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "text"));
+				fileChooser.setDialogTitle("Save Buildings");
 				int returnValue = fileChooser.showSaveDialog(null);
 				
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -200,7 +233,7 @@ public class MainForm extends JFrame
 					Logger logger = new Logger();
 					SaveBuildings(selectedFile.getAbsolutePath(), company, logger);
 					JOptionPane.showMessageDialog(thisFrame, logger.getLog(), "Saving Info", JOptionPane.PLAIN_MESSAGE);
-				}				
+				}
 			}
 		});
 		//saveBuildingMenuItem - End
@@ -284,6 +317,29 @@ public class MainForm extends JFrame
 	             }
 	         }
 	     });
+		buildingTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent e) 
+		    {
+		        if (!e.getValueIsAdjusting()) 
+		        {
+		            int selection = buildingTable.getSelectedRow();
+		            if (selection != -1)
+		            {
+		            	removeButton.setEnabled(true);
+		            	editShowButton.setEnabled(true);
+		            	manageBuildingExpenseButton.setEnabled(true);
+		            	calculateCostButton.setEnabled(true);
+		            }
+		            else
+		            {
+		            	removeButton.setEnabled(false);
+		            	editShowButton.setEnabled(false);
+		            	manageBuildingExpenseButton.setEnabled(false);
+		            	calculateCostButton.setEnabled(false);
+		            }
+		        }
+		    }
+		});
 		//Building Table - End
 		
 		//Building Panel - Begin
@@ -305,19 +361,17 @@ public class MainForm extends JFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int selection = buildingTable.getSelectedRow();
-				if (selection != -1)
+				int result = JOptionPane.showConfirmDialog(thisFrame, "Are You Sure You Want to Delete this Building?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION)
 				{
-					int result = JOptionPane.showConfirmDialog(thisFrame, "Are You Sure You Want to Delete this Building?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-					if (result == JOptionPane.YES_OPTION)
-					{
-						Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
-						company.getBuildingExpense().removeAll(company.getBuildingExpensesOfBuilding(building));
-						company.getBuilding().remove(building);
-						buildingTableModel.removeRow(selection);
-					}
+					Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
+					company.getBuildingExpense().removeAll(company.getBuildingExpensesOfBuilding(building));
+					company.getBuilding().remove(building);
+					buildingTableModel.removeRow(selection);
 				}
 			}
 		});
+		removeButton.setEnabled(false);
 		//Remove Button - End
 		
 		//Edit/Show Button - Begin
@@ -325,13 +379,11 @@ public class MainForm extends JFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int selection = buildingTable.getSelectedRow();
-				if (selection != -1)
-				{
-					Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
-					new EditBuildingForm(thisFrame, company, building, buildingTableModel, selection);
-				}
+				Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
+				new EditBuildingForm(thisFrame, company, building, buildingTableModel, selection);
 			}
 		});
+		editShowButton.setEnabled(false);
 		//Edit/Show Button - End
 		
 		//Manage Expense Button - Begin
@@ -339,13 +391,11 @@ public class MainForm extends JFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int selection = buildingTable.getSelectedRow();
-				if (selection != -1)
-				{
-					Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
-					new BuildingExpenseForm(thisFrame, company, building);
-				}
+				Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
+				new BuildingExpenseForm(thisFrame, company, building);
 			}
 		});
+		manageBuildingExpenseButton.setEnabled(false);
 		//Manage Expense Button - End
 		
 		//Calculate Cost Button - Begin
@@ -353,13 +403,11 @@ public class MainForm extends JFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int selection = buildingTable.getSelectedRow();
-				if (selection != -1)
-				{
-					Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
-					JOptionPane.showMessageDialog(thisFrame, "The total cost of this building is " + String.format("%.3f",company.calculateBuildingExpense(building)), "Total Expense Cost", JOptionPane.PLAIN_MESSAGE);
-				}
+				Building building = company.getBuildingByCode(buildingTable.getValueAt(selection, 0).toString());
+				JOptionPane.showMessageDialog(thisFrame, "The total cost of this building is " + String.format("%.3f",company.calculateBuildingExpense(building)), "Total Expense Cost", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
+		calculateCostButton.setEnabled(false);
 		//Calculate Cost Button - End
 		
 		//Button Panel - Begin

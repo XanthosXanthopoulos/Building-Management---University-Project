@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 public class BuildingExpenseForm extends JDialog 
@@ -83,6 +85,25 @@ public class BuildingExpenseForm extends JDialog
 				}
 			}
 		});
+		buildingExpenseTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent e) 
+		    {
+		        if (!e.getValueIsAdjusting()) 
+		        {
+		            int selection = buildingExpenseTable.getSelectedRow();
+		            if (selection != -1)
+		            {
+		            	removeButton.setEnabled(true);
+		            	editShowButton.setEnabled(true);
+		            }
+		            else
+		            {
+		            	removeButton.setEnabled(false);
+		            	editShowButton.setEnabled(false);
+		            }
+		        }
+		    }
+		});
 		// Building Expense Table - End
 
 		add(new JScrollPane(buildingExpenseTable), BorderLayout.CENTER);
@@ -101,25 +122,23 @@ public class BuildingExpenseForm extends JDialog
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int selection = buildingExpenseTable.getSelectedRow();
-				if (selection != -1) 
+				int result = JOptionPane.showConfirmDialog(thisFrame, "Are You Sure You Want to Delete this Building Expense?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) 
 				{
-					int result = JOptionPane.showConfirmDialog(thisFrame, "Are You Sure You Want to Delete this Building Expense?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-					if (result == JOptionPane.YES_OPTION) 
+					String code = buildingExpenseTable.getValueAt(selection, 0).toString();
+					for (BuildingExpense<?> buildExp : company.getBuildingExpensesOfBuilding(building))
 					{
-						String code = buildingExpenseTable.getValueAt(selection, 0).toString();
-						for (BuildingExpense<?> buildExp : company.getBuildingExpensesOfBuilding(building))
+						if (buildExp.getExpense().getCode().equals(code))
 						{
-							if (buildExp.getExpense().getCode().equals(code))
-							{
-								building.getBuildingExpense().remove(buildExp);
-								company.getBuildingExpense().remove(buildExp);
-								buildingExpenseTableModel.removeRow(selection);
-							}
+							building.getBuildingExpense().remove(buildExp);
+							company.getBuildingExpense().remove(buildExp);
+							buildingExpenseTableModel.removeRow(selection);
 						}
 					}
 				}
 			}
 		});
+		removeButton.setEnabled(false);
 		// Remove Button - End
 
 		// Edit/Show Button - Begin
@@ -127,14 +146,12 @@ public class BuildingExpenseForm extends JDialog
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int selection = buildingExpenseTable.getSelectedRow();
-				if (selection != -1) 
-				{
-					Expense<?> expense = company.getExpenseByCode(buildingExpenseTable.getValueAt(selection, 0).toString());
-					BuildingExpense<?> buildingExpense = company.getBuildingExpenseOfBuilding(building, expense);
-					new EditBuildingExpenseForm(thisFrame, company, buildingExpense, buildingExpenseTableModel, selection);
-				}
+				Expense<?> expense = company.getExpenseByCode(buildingExpenseTable.getValueAt(selection, 0).toString());
+				BuildingExpense<?> buildingExpense = company.getBuildingExpenseOfBuilding(building, expense);
+				new EditBuildingExpenseForm(thisFrame, company, buildingExpense, buildingExpenseTableModel, selection);
 			}
 		});
+		editShowButton.setEnabled(false);
 		// Edit/Show Button - End
 		
 		
