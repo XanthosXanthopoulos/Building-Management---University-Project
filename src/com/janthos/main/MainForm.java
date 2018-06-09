@@ -36,6 +36,7 @@ public class MainForm extends JFrame
 	private JMenuItem openBuildingMenuItem = null;
 	private JMenuItem saveExpenseMenuItem = null;
 	private JMenuItem saveBuildingMenuItem = null;
+	private JMenuItem clearMenuItem = null;
 	private JComboBox<String> expenseTypeComboBox = null;
 	private JTabbedPane tabControl = null;
 	private JPanel expensePanel = null, buildingPanel = null, buttonPanel = null;
@@ -100,6 +101,7 @@ public class MainForm extends JFrame
 		openBuildingMenuItem = new JMenuItem();
 		saveExpenseMenuItem = new JMenuItem();
 		saveBuildingMenuItem = new JMenuItem();
+		clearMenuItem = new JMenuItem();
 		tabControl = new JTabbedPane();
 		expensePanel = new JPanel();
 		buildingPanel = new JPanel();
@@ -238,11 +240,29 @@ public class MainForm extends JFrame
 		});
 		//saveBuildingMenuItem - End
 		
+		//clearMenuItem - Begin
+		clearMenuItem.setText("Clear");
+		clearMenuItem.addActionListener(new AbstractAction("Save Buildings") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				expenseTableModel.setRowCount(0);
+				buildingTableModel.setRowCount(0);
+				company.getBuildingExpense().clear();
+				company.getBuilding().clear();
+				company.getExpense().clear();
+			}
+		});
+		//clearMenuItem - End
+		
 		fileMenu.add(openExpenseMenuItem);
 		fileMenu.add(openBuildingMenuItem);
 		fileMenu.add(new JSeparator());
 		fileMenu.add(saveExpenseMenuItem);
 		fileMenu.add(saveBuildingMenuItem);
+		fileMenu.add(new JSeparator());
+		fileMenu.add(clearMenuItem);
 		menuBar.add(fileMenu);
 		setJMenuBar(menuBar);
 		
